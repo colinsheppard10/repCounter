@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-import cvzone.PoseModule as pm
+import PoseModule as pm
 
 # take from this tutorial cv zone: https://www.computervision.zone/lessons/code-files-15/
 
