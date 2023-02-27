@@ -14,7 +14,6 @@ def findAngle(points, p1, p2, p3):
     if angle < 0:
         angle += 360
 
-    # print(angle)
     return angle
 
 def countExercise(count, dir, points, p1, p2, p3):

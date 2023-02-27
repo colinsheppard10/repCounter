@@ -1,9 +1,6 @@
 import cv2
 import mediapipe as mp
-
-from ExerciseCounter import countExercise, findAngle
-
-
+from ExerciseCounter import countExercise
 # current tutorial: https://youtu.be/4WwSJAKRtcA - using landmarks
 
 mpDraw = mp.solutions.drawing_utils
