@@ -1,8 +1,7 @@
 import cv2
 import mediapipe as mp
-import numpy as np
 
-from ExerciseCounter import findAngle
+from ExerciseCounter import countExercise, findAngle
 
 
 # current tutorial: https://youtu.be/4WwSJAKRtcA - using landmarks
@@ -32,36 +31,19 @@ while True:
             cx, cy = int(lm.x*w), int(lm.y*h)
             points[id] = (cx, cy)
 
-        cv2.circle(img, points[12], 15, (255,0,0), cv2.FILLED)
-        cv2.circle(img, points[14], 15, (255,0,0), cv2.FILLED)
-        cv2.circle(img, points[16], 15, (255,0,0), cv2.FILLED)
 
-        angle = findAngle(points, 12, 14, 16)
+        exercise = [12,14,16]
 
-        # # Left Arm
-        #angle = detector.findAngle(img, 11, 13, 15,False)
-        per = np.interp(angle, (210, 310), (0, 100))
-        bar = np.interp(angle, (220, 310), (650, 100))
-        # print(angle, per)
-
-        # Check for the dumbbell curls
-        print('per:',per, ' dir:', dir, ' count:', count)
-        color = (255, 0, 255)
-        if per == 100:
-            color = (0, 255, 0)
-            if dir == 0:
-                count += 0.5
-                dir = 1
-        if per == 0:
-            color = (0, 255, 0)
-            if dir == 1:
-                count += 0.5
-                dir = 0
+        cv2.circle(img, points[exercise[0]], 15, (255,0,0), cv2.FILLED)
+        cv2.circle(img, points[exercise[1]], 15, (255,0,0), cv2.FILLED)
+        cv2.circle(img, points[exercise[2]], 15, (255,0,0), cv2.FILLED)
+        
+        dir, count, percent, bar, color = countExercise(count, dir, points, exercise[0], exercise[1], exercise[2])
 
         # Draw Bar
         cv2.rectangle(img, (1100, 100), (1175, 650), color, 3)
         cv2.rectangle(img, (1100, int(bar)), (1175, 650), color, cv2.FILLED)
-        cv2.putText(img, f'{int(per)} %', (1100, 75), cv2.FONT_HERSHEY_PLAIN, 4,
+        cv2.putText(img, f'{int(percent)} %', (1100, 75), cv2.FONT_HERSHEY_PLAIN, 4,
                     color, 4)
 
         # Draw Curl Count
