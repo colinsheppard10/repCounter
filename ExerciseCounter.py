@@ -1,5 +1,17 @@
+import os
+import time
 import numpy as np
 import math
+
+def countDown(start):
+    while(start > 0):
+        os.system('say "%s"' % int(start))
+        time.sleep(1)
+        start = start - 1
+
+    os.system('say "start"')
+
+
 
 def handleReverse(startAngle, angle, endAngle):
     if(endAngle < startAngle):
@@ -28,8 +40,6 @@ def findDistance(points, p1, p2, p3):
     x1, y1 = points[p1]
     x2, y2 = points[p2]
     x3, y3 = points[p3]
-
-    print('y1:' + str(y1) + ' y2:' + str(y2) + ' y3:' + str(y3))
 
     y1 = y1 * -1
     y2 = y2 * -1
@@ -65,6 +75,7 @@ def countExercise(count, dir, points, anchors, startEndAngles, isAngle):
         color = (0, 255, 0)
         if dir == 0:
             count += 0.5
+            os.system('say "%s"' % int(count))
             dir = 1
     if percent == 0:
         color = (0, 255, 0)
@@ -72,5 +83,4 @@ def countExercise(count, dir, points, anchors, startEndAngles, isAngle):
             count += 0.5
             dir = 0
 
-    print('count' + str(count) + 'angle:' + str(angle))
     return (dir, count, percent, bar, color)

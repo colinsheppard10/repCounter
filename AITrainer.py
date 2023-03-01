@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 from Exercise import Exercise
-from ExerciseCounter import countExercise
+from ExerciseCounter import countDown, countExercise
 # current tutorial: https://youtu.be/4WwSJAKRtcA - using landmarks
 
 mpDraw = mp.solutions.drawing_utils
@@ -21,13 +21,18 @@ cap = cv2.VideoCapture(0)
 # hip thrust / 
 
 upper = [
-    Exercise('crls',[12,14,16], [210, 310], True),
-    Exercise('sh p',[6,16,12], [0, 1], False),
+    Exercise('PULL UP',[12,16,6], [0, 1], False),
+    Exercise('PUSH UP',[6,16,12], [170, 110], True),
+    Exercise('CURLS',[12,14,16], [210, 310], True),
+    Exercise('SHR PRS',[6,16,12], [0, 1], False),
+    Exercise('SID RAS',[24,16,12], [0, 1], False),
+    Exercise('OVR HED',[6,16,12], [110, 170], True),
+    Exercise('PUL DWN',[6,16,12], [110, 170], True),
 ]
 
 lower = [
-    Exercise('sqts',[24,26,28], [170, 110], True),
-    Exercise('sp s',[12,16,24], [0, 1], False)
+    Exercise('SQUAT',[24,26,28], [170, 110], True),
+    Exercise('SPT SQT',[12,16,24], [0, 1], False)
 ]
 
 def runExercise(setNumber, exercise):
@@ -67,8 +72,8 @@ def runExercise(setNumber, exercise):
                         color, 4)
 
             # Draw Curl Count
-            cv2.rectangle(img, (0, 450), (w - 185, 720), (255, 255, 255), cv2.FILLED)
-            cv2.putText(img, str(setNumber) + ':'+ str(int(count)) + ':' + name, (45, 670), cv2.FONT_HERSHEY_PLAIN, 15,
+            cv2.rectangle(img, (0, 530), (w - 185, 720), (255, 255, 255), cv2.FILLED)
+            cv2.putText(img, str(setNumber) + ' : '+ str(int(count)) + ' : ' + name, (45, 670), cv2.FONT_HERSHEY_PLAIN, 8,
                         (0, 0, 0), 25)
             
         cv2.imshow('frame', img)
@@ -80,8 +85,8 @@ def runExercise(setNumber, exercise):
             break
 
 def runWorkout():
-    # curls and press
-    runExercise(1, upper[1])
+    countDown(3)
+    runExercise(1, upper[3])
     return
 
 
