@@ -1,5 +1,7 @@
+
 import cv2
 import mediapipe as mp
+from enum import Enum
 from Exercise import Exercise
 from ExerciseCounter import countDown, countExercise
 # current tutorial: https://youtu.be/4WwSJAKRtcA - using landmarks
@@ -10,42 +12,37 @@ pose = mpPose.Pose()
 # cap = cv2.VideoCapture("videos/raises.mp4")
 cap = cv2.VideoCapture(0)
 
-# anchor [1,2,3] (2 is pivot), [startAngle, endAngle], [startAbove, startBelow]
-
-#curl / press
-# fly / overhead
-# shrug / row
-# pulldown / situp
-
-# band squat / jump lung
-# hip thrust / 
+# class syntax
+class PoseType:
+    ANGLE = 'ANGLE'
+    DISTANCE = 'DISTANCE'
+    BINARY = 'BINARY'
 
 upper = [
-    Exercise('PULL UP',[12,16,6], [0, 1], False),
-    Exercise('PUSH UP',[6,16,12], [170, 110], True),
-    Exercise('CURLS',[12,14,16], [210, 310], True),
-    Exercise('SHR PRS',[6,16,12], [0, 1], False),
-    Exercise('SID RAS',[24,16,12], [0, 1], False),
-    Exercise('OVR HED',[6,16,12], [110, 170], True),
-    Exercise('PUL DWN',[6,16,12], [110, 170], True),
+    Exercise('PULL UP',[6,16,0], [0, 1], 2, 150, True, PoseType.BINARY),
+    Exercise('PUSH UP',[14,6,0], [0, 1], 2, 0, False, PoseType.BINARY),
+    Exercise('CURLS',[12,14,16], [210, 310], 10, 0, False, PoseType.ANGLE),
+    Exercise('SHR PRS',[16,0,0], [0, 1], 10, 100, False, PoseType.BINARY),
+    Exercise('SID RAS',[16,12,0], [0, 1], 10, 100, False, PoseType.BINARY),
+    Exercise('OVR HED',[16,6,0], [0, 1], 10, 0, True, PoseType.BINARY),
+    Exercise('PUL DWN',[16,14,0], [0, 1], 10, 0, True, PoseType.BINARY),
 ]
-
 lower = [
-    Exercise('SQUAT',[24,26,28], [170, 110], True),
-    Exercise('SPT SQT',[12,16,24], [0, 1], False)
+    Exercise('SQUAT',[24,26,28], [170, 110], 10, 0, False, PoseType.ANGLE),
+    Exercise('SPT SQT',[16,12,0], [0, 1], 10, 100, False, PoseType.BINARY),
+    Exercise('1LG SQT',[24,26,0], [0, 1], 10, 100, True, PoseType.BINARY),
 ]
 
 def runExercise(setNumber, exercise):
-    count = .5
+    anchors = exercise.anchors
+    startInverted = exercise.startInverted
+    reps = exercise.reps
+    name = exercise.name
+
+    count = -.5 if startInverted else .5
     dir = 0
+
     while True: 
-
-        anchors = exercise.anchors
-        startEndAngles = exercise.startEndAngles
-        isAngle = exercise.isAngle
-        reps = exercise.reps
-        name = exercise.name
-
         ret, img = cap.read()
         # Display the resulting frame
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -58,12 +55,14 @@ def runExercise(setNumber, exercise):
                 h, w, c = img.shape
                 cx, cy = int(lm.x*w), int(lm.y*h)
                 points[id] = (cx, cy)
+            
+            # Count rep
+            dir, count, percent, bar, color = countExercise(count, dir, points, exercise)
 
+            # Draw circles used on body
             cv2.circle(img, points[anchors[0]], 15, (255,0,0), cv2.FILLED)
             cv2.circle(img, points[anchors[1]], 15, (255,0,0), cv2.FILLED)
             cv2.circle(img, points[anchors[2]], 15, (255,0,0), cv2.FILLED)
-            
-            dir, count, percent, bar, color = countExercise(count, dir, points, anchors, startEndAngles, isAngle)
 
             # Draw Bar
             cv2.rectangle(img, (1100, 100), (1175, 650), color, 3)
@@ -85,10 +84,10 @@ def runExercise(setNumber, exercise):
             break
 
 def runWorkout():
-    countDown(3)
-    runExercise(1, upper[3])
+    for setNumber in range(1, 5):
+        for exerciseIndex in range(0, 2):
+            runExercise(setNumber, upper[exerciseIndex])
     return
-
 
 runWorkout()
 # After the loop release the cap object
