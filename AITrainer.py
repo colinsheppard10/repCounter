@@ -19,8 +19,8 @@ class PoseType:
     BINARY = 'BINARY'
 
 upper = [
-    Exercise('PULL UP',[6,16,0], [0, 1], 2, 150, True, PoseType.BINARY),
-    Exercise('PUSH UP',[14,6,0], [0, 1], 2, 0, False, PoseType.BINARY),
+    Exercise('PULL UP',[6,16,0], [0, 1], 10, 150, True, PoseType.BINARY),
+    Exercise('PUSH UP',[14,6,0], [0, 1], 20, 0, False, PoseType.BINARY),
     Exercise('CURLS',[12,14,16], [210, 310], 10, 0, False, PoseType.ANGLE),
     Exercise('SHR PRS',[16,0,0], [0, 1], 10, 100, False, PoseType.BINARY),
     Exercise('SID RAS',[16,12,0], [0, 1], 10, 100, False, PoseType.BINARY),
@@ -28,8 +28,9 @@ upper = [
     Exercise('PUL DWN',[16,14,0], [0, 1], 10, 0, True, PoseType.BINARY),
 ]
 lower = [
-    Exercise('SQUAT',[24,26,28], [170, 110], 10, 0, False, PoseType.ANGLE),
+    Exercise('J SQT',[24,26,28], [170, 110], 10, 0, False, PoseType.ANGLE),
     Exercise('SPT SQT',[16,12,0], [0, 1], 10, 100, False, PoseType.BINARY),
+    Exercise('BND SQT',[24,26,28], [170, 110], 10, 0, False, PoseType.ANGLE),
     Exercise('1LG SQT',[24,26,0], [0, 1], 10, 100, True, PoseType.BINARY),
 ]
 
@@ -86,7 +87,7 @@ def runExercise(setNumber, exercise):
 def runWorkout():
     for setNumber in range(1, 5):
         for exerciseIndex in range(0, 2):
-            runExercise(setNumber, upper[exerciseIndex])
+            runExercise(setNumber, lower[exerciseIndex])
     return
 
 runWorkout()
